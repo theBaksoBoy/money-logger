@@ -17,10 +17,7 @@ category_directory: string = "" // directory that all the different categories a
 
 main :: proc() {
     LoadConfigFile()
-
-    for {
-        MainMenu()
-    }
+    MainMenu()
 }
 
 
@@ -59,25 +56,97 @@ LoadConfigFile :: proc() {
 
 MainMenu :: proc() {
 
-    fmt.print(
-        "[1] add/remove items\n" +
-        "[2] get info\n" +
-        "[3] manage categories\n" +
-        "[1/2/3]: "
-    )
+    for {
 
-    // get user's answer
-    buffer: [128]byte
-    bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print("\n" +
+            "[1] add/remove items\n" +
+            "[2] get info\n" +
+            "[3] manage categories\n" +
+            "[1/2/3]: "
+        )
 
-    // parse user's answer
-    if buffer[0] == byte('1') {
-        fmt.println("one")
-    } else if buffer[0] == byte('2') {
-        fmt.println("two")
-    } else if buffer[0] == byte('3') {
-        fmt.println("three")
-    } else {
-        fmt.println("invalid selection. try again.")
+        // get user's answer
+        buffer: [128]byte
+        _, _ = os.read(os.stdin, buffer[:])
+
+        // parse user's answer
+        if buffer[0] == byte('1') {
+            fmt.println("WIP---------------------")
+            break
+        } else if buffer[0] == byte('2') {
+            fmt.println("WIP---------------------")
+            break
+        } else if buffer[0] == byte('3') {
+            CategoryMenu()
+            break
+        } else {
+            fmt.println("invalid selection. try again.")
+        }
+    }
+}
+
+
+
+CategoryMenu :: proc() {
+
+    for {
+        fmt.print("\n" +
+            "[1] create a category\n" +
+            "[2] delete a category\n" +
+            "[3] change the auto-add multiplier for a category\n" +
+            "[1/2/3]: "
+        )
+
+        // get user's answer
+        buffer: [128]byte
+        _, _ = os.read(os.stdin, buffer[:])
+
+        // parse user's answer
+        if buffer[0] == byte('1') {
+            CreateCategory()
+            break
+        } else if buffer[0] == byte('2') {
+            fmt.println("WIP---------------------")
+            break
+        } else if buffer[0] == byte('3') {
+            fmt.println("WIP---------------------")
+            break
+        } else {
+            fmt.println("invalid selection. try again.")
+        }
+    }
+}
+
+
+
+CreateCategory :: proc() {
+
+    for {
+        fmt.print("\nspecify the name of the new category. note that it has to be a valid file name, so no special characters like slashes\nname: ")
+        buffer: [512]byte
+        bytes_read, _ := os.read(os.stdin, buffer[:])
+
+        if buffer[0] == byte('\n') {
+            fmt.println("category name can not be empty. try again.")
+            continue
+        }
+
+        if os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
+            fmt.println("category with specified name already exists. try again.")
+            continue
+        }
+
+        new_category := Category{0, {}, 0}
+        data, _ := json.marshal(
+            new_category,
+            json.Marshal_Options{
+                pretty = true,
+            }
+        )
+        defer delete(data)
+
+        results := os.write_entire_file(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1])), data)
+        fmt.println("category created.")
+        break
     }
 }

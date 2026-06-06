@@ -10,6 +10,7 @@ TODO:
 - add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt
 - explain what last_calculated_sum is for
 - explain what the auto_add_multiplier is for
+- when writing a json file, do it like you did in CreateCategory where you did shit with the marshel settings to make indents and stuff, so that the json file actually ends up being readable
 
 menu design:
 - [1] add/remove items
