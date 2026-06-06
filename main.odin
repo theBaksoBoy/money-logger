@@ -3,12 +3,24 @@ package main
 import "core:os"
 import "core:fmt"
 import "core:strings"
+import "core:encoding/json"
 
 
-category_directory: string = "" // directory that all the different categories will be in
+Category :: struct {
+    auto_add_multiplier: f32,
+    items: []string,
+    last_calculated_sum: f32,
+}
+
+
+category_directory: string = "" // directory that all the different categories are in
 
 main :: proc() {
     LoadConfigFile()
+
+    for {
+        MainMenu()
+    }
 }
 
 
@@ -41,4 +53,31 @@ LoadConfigFile :: proc() {
         fmt.println("category_directory=/example/path/ is missing from ~/.config/money_logger/settings.txt")
     }
 
+}
+
+
+
+MainMenu :: proc() {
+
+    fmt.print(
+        "[1] add/remove items\n" +
+        "[2] get info\n" +
+        "[3] manage categories\n" +
+        "[1/2/3]: "
+    )
+
+    // get user's answer
+    buffer: [128]byte
+    bytes_read, _ := os.read(os.stdin, buffer[:])
+
+    // parse user's answer
+    if buffer[0] == byte('1') {
+        fmt.println("one")
+    } else if buffer[0] == byte('2') {
+        fmt.println("two")
+    } else if buffer[0] == byte('3') {
+        fmt.println("three")
+    } else {
+        fmt.println("invalid selection. try again.")
+    }
 }
