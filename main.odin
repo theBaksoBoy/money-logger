@@ -54,6 +54,22 @@ LoadConfigFile :: proc() {
 
 
 
+PrintExistingCategories :: proc() {
+    dir, _ := os.open(category_directory)
+    defer os.close(dir)
+    entries, _ := os.read_dir(dir, 1024, context.allocator)
+    defer delete(entries)
+
+    for entry in entries {
+        if strings.has_suffix(entry.name, ".json") {
+            base := strings.trim_suffix(entry.name, ".json")
+            fmt.println(fmt.tprintf("    %s", base))
+        }
+    }
+}
+
+
+
 MainMenu :: proc() {
 
     for {
@@ -106,7 +122,7 @@ CategoryMenu :: proc() {
             CreateCategory()
             break
         } else if buffer[0] == byte('2') {
-            fmt.println("WIP---------------------")
+            DeleteCategory()
             break
         } else if buffer[0] == byte('3') {
             fmt.println("WIP---------------------")
@@ -147,6 +163,29 @@ CreateCategory :: proc() {
 
         results := os.write_entire_file(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1])), data)
         fmt.println("category created.")
+        break
+    }
+}
+
+
+
+DeleteCategory :: proc() {
+
+    for {
+        fmt.println("\nexisting categories:")
+        PrintExistingCategories()
+        fmt.print("specify what category to delete.\ndelete: ")
+
+        buffer: [512]byte
+        bytes_read, _ := os.read(os.stdin, buffer[:])
+
+        if !os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
+            fmt.println("category does not exist. try again.")
+            continue
+        }
+
+        os.remove(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1])))
+        fmt.println(string(buffer[:bytes_read-1]), "deleted.")
         break
     }
 }
