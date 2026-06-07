@@ -6,11 +6,11 @@ This readme.md is very work-in-progress, since as of writing this the project is
 
 ---
 TODO:
+- you are done with all options in option [3] in the main menu. Now you need to do [1] and [2]
 - specify that you both add and remove money here. Adding is done with positive numbers, and removing (for purchases) is done with negative numbers
 - add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt
 - explain what last_calculated_sum is for
 - explain what the auto_add_multiplier is for
-- when writing a json file, do it like you did in CreateCategory where you did shit with the marshel settings to make indents and stuff, so that the json file actually ends up being readable
 
 menu design:
 - [1] add/remove items
