@@ -71,6 +71,36 @@ PrintExistingCategories :: proc() {
 
 
 
+PrintExistingCategoriesWithMultiplier :: proc() {
+    // prints all existing categories where it also says the auto-add multiplier.
+    // it also mentions how much should go into savings
+
+    remaining_multiplier: f32 = 1
+
+    dir, _ := os.open(category_directory)
+    defer os.close(dir)
+    entries, _ := os.read_dir(dir, 1024, context.allocator)
+    defer delete(entries)
+
+    for entry in entries {
+        if strings.has_suffix(entry.name, ".json") {
+            base := strings.trim_suffix(entry.name, ".json")
+            category := LoadCategory(base)
+            fmt.println(fmt.tprintf("    %s: %d%%", base, int (category.auto_add_multiplier * 100 + 0.5)))
+            remaining_multiplier -= category.auto_add_multiplier
+        }
+    }
+    fmt.println(fmt.tprintf("    (%d%% remains, and goes into savings)", int (remaining_multiplier * 100 + 0.5)))
+}
+
+
+
+GetCategoryPath :: proc(category_name: string) -> string {
+    return fmt.tprintf("%s%s.json", category_directory, category_name)
+}
+
+
+
 SaveCategoryJson :: proc(category: Category, category_name: string) {
 
     data, _ := json.marshal(
@@ -81,7 +111,27 @@ SaveCategoryJson :: proc(category: Category, category_name: string) {
     )
     defer delete(data)
 
-    results := os.write_entire_file(fmt.tprintf("%s%s.json", category_directory, category_name), data)
+    results := os.write_entire_file(GetCategoryPath(category_name), data)
+}
+
+
+
+LoadCategory :: proc(category_name: string) -> Category {
+
+    json_string, err := os.read_entire_file_from_path(GetCategoryPath(category_name), context.allocator)
+    if err != nil {
+        fmt.println("error reading json file:", err)
+        os.exit(1)
+    }
+    defer delete(json_string)
+    category: Category
+    unmarshal_err := json.unmarshal(json_string, &category)
+    if unmarshal_err != nil {
+        fmt.println("error pasing json:", err)
+        os.exit(1)
+    }
+
+    return category
 }
 
 
@@ -106,7 +156,7 @@ MainMenu :: proc() {
             fmt.println("WIP---------------------")
             break
         } else if buffer[0] == byte('2') {
-            fmt.println("WIP---------------------")
+            InfoMenu()
             break
         } else if buffer[0] == byte('3') {
             CategoryMenu()
