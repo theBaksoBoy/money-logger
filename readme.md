@@ -20,7 +20,7 @@ menu design and progress:
   + (WIP) [1] list all items in a category
   + (WIP) [2] get the sum of a category
   + (WIP) [3] make a graph of a category's sum (are you still going to have this feature? It would be pretty neat if you can)
-  + (WIP) [4] get the percentage of money that goes into each category when using the auto-add thing
+  + [4] get the percentage of money that goes into each category when using the auto-add thing
 - [3] manage categories
   + [1] create a category
   + [2] delete a category
