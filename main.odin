@@ -5,12 +5,21 @@ import "core:fmt"
 import "core:strings"
 import "core:encoding/json"
 import "core:strconv"
+import "core:time/datetime"
 
 
 Category :: struct {
     auto_add_multiplier: f32,
-    items: []string,
+    items: []Item,
     last_calculated_sum: f32,
+}
+
+
+
+Item :: struct {
+    date: datetime.Date,
+    money_delta: f32,
+    description: string
 }
 
 
@@ -120,7 +129,6 @@ GetCategoryPath :: proc(category_name: string) -> string {
 
 
 SaveCategoryJson :: proc(category: Category, category_name: string) {
-    //NOTE!! // tweak this function a bit so that before it saves it to json, it makes sure that it is sorted by date
     data, _ := json.marshal(
         category,
         json.Marshal_Options{
@@ -171,7 +179,7 @@ MainMenu :: proc() {
 
         // parse user's answer
         if buffer[0] == byte('1') {
-            fmt.println("WIP---------------------")
+            ItemMenu()
             break
         } else if buffer[0] == byte('2') {
             InfoMenu()

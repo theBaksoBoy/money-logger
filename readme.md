@@ -6,6 +6,7 @@ This readme.md is very work-in-progress, since as of writing this the project is
 
 ---
 TODO:
+- make LoadCategory() sort the items according to the date in the created Category variable
 - specify that you both add and remove money here. Adding is done with positive numbers, and removing (for purchases) is done with negative numbers
 - add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt
 - explain what last_calculated_sum is for
