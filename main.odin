@@ -14,6 +14,34 @@ Category :: struct {
 }
 
 
+
+Color :: enum {
+    RESET,
+    BLACK,
+    RED,
+    GREEN,
+    YELLOW,
+    BLUE,
+    MAGENTA,
+    CYAN,
+    WHITE,
+}
+GetColor :: proc(color: Color) -> string {
+    switch color {
+    case .RESET: return "\x1b[0m"
+    case .BLACK: return "\x1b[30m"
+    case .RED: return "\x1b[31m"
+    case .GREEN: return "\x1b[32m"
+    case .YELLOW: return "\x1b[33m"
+    case .BLUE: return "\x1b[34m"
+    case .MAGENTA: return "\x1b[35m"
+    case .CYAN: return "\x1b[36m"
+    case .WHITE: return "\x1b[37m"
+    }
+    return ""
+}
+
+
 category_directory: string = "" // directory that all the different categories are in
 
 main :: proc() {
@@ -70,7 +98,7 @@ PrintExistingCategories :: proc(show_multipliers: bool) {
             category := LoadCategory(base)
 
             if show_multipliers {
-                fmt.println(fmt.tprintf("    %s: %d%%", base, int (category.auto_add_multiplier * 100 + 0.5)))
+                fmt.println(fmt.tprintf("    %s: %s%d%%%s", base, GetColor(.CYAN), int(category.auto_add_multiplier * 100 + 0.5), GetColor(.RESET)))
                 remaining_multiplier -= category.auto_add_multiplier
             } else {
                 fmt.println(fmt.tprintf("    %s", base))
@@ -79,7 +107,7 @@ PrintExistingCategories :: proc(show_multipliers: bool) {
     }
 
     if show_multipliers {
-        fmt.println(fmt.tprintf("    (%d%% remains, and goes into savings)", int (remaining_multiplier * 100 + 0.5)))
+        fmt.println(fmt.tprintf("    (%s%d%%%s remains, and goes into savings)", GetColor(.GREEN), int(remaining_multiplier * 100 + 0.5), GetColor(.RESET)))
     }
 }
 
