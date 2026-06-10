@@ -120,7 +120,7 @@ GetCategoryPath :: proc(category_name: string) -> string {
 
 
 SaveCategoryJson :: proc(category: Category, category_name: string) {
-
+    //NOTE!! // tweak this function a bit so that before it saves it to json, it makes sure that it is sorted by date
     data, _ := json.marshal(
         category,
         json.Marshal_Options{
@@ -138,14 +138,14 @@ LoadCategory :: proc(category_name: string) -> Category {
 
     json_string, err := os.read_entire_file_from_path(GetCategoryPath(category_name), context.allocator)
     if err != nil {
-        fmt.println("error reading json file:", err)
+        fmt.println(fmt.tprintf("error reading the json file %s.json:", category_name), err)
         os.exit(1)
     }
     defer delete(json_string)
     category: Category
     unmarshal_err := json.unmarshal(json_string, &category)
     if unmarshal_err != nil {
-        fmt.println("error pasing json:", err)
+        fmt.println(fmt.tprintf("error parsing the json file %s.json:", category_name), err)
         os.exit(1)
     }
 
