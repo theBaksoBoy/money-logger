@@ -34,7 +34,7 @@ InfoMenu :: proc() {
             fmt.println("WIP---------------------")
             break
         } else if buffer[0] == byte('4') {
-            PrintExistingCategoriesWithMultiplier()
+            PrintExistingCategories(true)
             break
         } else {
             fmt.println("invalid selection. try again.")

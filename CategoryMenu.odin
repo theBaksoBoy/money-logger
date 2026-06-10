@@ -44,7 +44,7 @@ CreateCategory :: proc() {
 
     for {
         fmt.println("\nexisting categories:")
-        PrintExistingCategories()
+        PrintExistingCategories(false)
         fmt.print("specify the name of the new category. note that it has to be a valid file name, so no special characters like slashes\nname: ")
         buffer: [512]byte
         bytes_read, _ := os.read(os.stdin, buffer[:])
@@ -72,7 +72,7 @@ DeleteCategory :: proc() {
 
     for {
         fmt.println("\nexisting categories:")
-        PrintExistingCategories()
+        PrintExistingCategories(false)
         fmt.print("specify what category to delete.\ndelete: ")
 
         buffer: [512]byte
@@ -95,7 +95,7 @@ DeleteCategory :: proc() {
 ChangeCategoryAutoAddMultiplier :: proc() {
     for {
         fmt.println("\nexisting categories:")
-        PrintExistingCategoriesWithMultiplier()
+        PrintExistingCategories(true)
         fmt.print("specify what category to change the auto-add multiplier of.\ncategory: ")
 
         buffer: [512]byte

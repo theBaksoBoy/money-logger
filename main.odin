@@ -55,25 +55,7 @@ LoadConfigFile :: proc() {
 
 
 
-PrintExistingCategories :: proc() {
-    dir, _ := os.open(category_directory)
-    defer os.close(dir)
-    entries, _ := os.read_dir(dir, 1024, context.allocator)
-    defer delete(entries)
-
-    for entry in entries {
-        if strings.has_suffix(entry.name, ".json") {
-            base := strings.trim_suffix(entry.name, ".json")
-            fmt.println(fmt.tprintf("    %s", base))
-        }
-    }
-}
-
-
-
-PrintExistingCategoriesWithMultiplier :: proc() {
-    // prints all existing categories where it also says the auto-add multiplier.
-    // it also mentions how much should go into savings
+PrintExistingCategories :: proc(show_multipliers: bool) {
 
     remaining_multiplier: f32 = 1
 
@@ -86,11 +68,19 @@ PrintExistingCategoriesWithMultiplier :: proc() {
         if strings.has_suffix(entry.name, ".json") {
             base := strings.trim_suffix(entry.name, ".json")
             category := LoadCategory(base)
-            fmt.println(fmt.tprintf("    %s: %d%%", base, int (category.auto_add_multiplier * 100 + 0.5)))
-            remaining_multiplier -= category.auto_add_multiplier
+
+            if show_multipliers {
+                fmt.println(fmt.tprintf("    %s: %d%%", base, int (category.auto_add_multiplier * 100 + 0.5)))
+                remaining_multiplier -= category.auto_add_multiplier
+            } else {
+                fmt.println(fmt.tprintf("    %s", base))
+            }
         }
     }
-    fmt.println(fmt.tprintf("    (%d%% remains, and goes into savings)", int (remaining_multiplier * 100 + 0.5)))
+
+    if show_multipliers {
+        fmt.println(fmt.tprintf("    (%d%% remains, and goes into savings)", int (remaining_multiplier * 100 + 0.5)))
+    }
 }
 
 
