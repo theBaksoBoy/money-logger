@@ -60,6 +60,39 @@ main :: proc() {
 
 
 
+MainMenu :: proc() {
+
+    for {
+
+        fmt.print("\n" +
+            "[1] add/remove items\n" +
+            "[2] get info\n" +
+            "[3] manage categories\n" +
+            "[1/2/3]: "
+        )
+
+        // get user's answer
+        buffer: [128]byte
+        _, _ = os.read(os.stdin, buffer[:])
+
+        // parse user's answer
+        if buffer[0] == byte('1') {
+            ItemMenu()
+            break
+        } else if buffer[0] == byte('2') {
+            InfoMenu()
+            break
+        } else if buffer[0] == byte('3') {
+            CategoryMenu()
+            break
+        } else {
+            fmt.println("invalid selection. try again.")
+        }
+    }
+}
+
+
+
 LoadConfigFile :: proc() {
 
     home_dir := os.get_env("HOME", context.allocator)
@@ -162,33 +195,21 @@ LoadCategory :: proc(category_name: string) -> Category {
 
 
 
-MainMenu :: proc() {
+MakeUserSelectCategory :: proc(instructions: string, show_multipliers: bool) -> string {
 
     for {
+        fmt.println("\nexisting categories:")
+        PrintExistingCategories(show_multipliers)
+        fmt.print(instructions)
 
-        fmt.print("\n" +
-            "[1] add/remove items\n" +
-            "[2] get info\n" +
-            "[3] manage categories\n" +
-            "[1/2/3]: "
-        )
+        buffer: [512]byte
+        bytes_read, _ := os.read(os.stdin, buffer[:])
 
-        // get user's answer
-        buffer: [128]byte
-        _, _ = os.read(os.stdin, buffer[:])
-
-        // parse user's answer
-        if buffer[0] == byte('1') {
-            ItemMenu()
-            break
-        } else if buffer[0] == byte('2') {
-            InfoMenu()
-            break
-        } else if buffer[0] == byte('3') {
-            CategoryMenu()
-            break
-        } else {
-            fmt.println("invalid selection. try again.")
+        if !os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
+            fmt.println("category does not exist. try again.")
+            continue
         }
+
+        return strings.clone(string(buffer[:bytes_read-1]), context.allocator)
     }
 }

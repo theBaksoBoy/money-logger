@@ -70,70 +70,45 @@ CreateCategory :: proc() {
 
 DeleteCategory :: proc() {
 
-    for {
-        fmt.println("\nexisting categories:")
-        PrintExistingCategories(false)
-        fmt.print("specify what category to delete.\ndelete: ")
-
-        buffer: [512]byte
-        bytes_read, _ := os.read(os.stdin, buffer[:])
-
-        if !os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
-            fmt.println("category does not exist. try again.")
-            continue
-        }
-
-        os.remove(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1])))
-        fmt.println(string(buffer[:bytes_read-1]), "deleted.")
-        break
-    }
+    selected_category := MakeUserSelectCategory("specify what category to delete.\ndelete: ", false)
+    defer delete(selected_category)
+    os.remove(fmt.tprintf("%s%s.json", category_directory, selected_category))
+    fmt.println(selected_category, "deleted.")
 }
 
 
 
 
 ChangeCategoryAutoAddMultiplier :: proc() {
+
+    selected_category := MakeUserSelectCategory("specify what category to change the auto-add multiplier of.\ncategory: ", true)
+    defer delete(selected_category)
+
     for {
-        fmt.println("\nexisting categories:")
-        PrintExistingCategories(true)
-        fmt.print("specify what category to change the auto-add multiplier of.\ncategory: ")
+        fmt.print("\nwhat should the multiplier be changed to?\n[0-1]: ")
 
         buffer: [512]byte
         bytes_read, _ := os.read(os.stdin, buffer[:])
 
-        if !os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
-            fmt.println("category does not exist. try again.")
+        s := string(buffer[:bytes_read-1])
+        multiplier, ok := strconv.parse_f32(s)
+        if !ok {
+            fmt.println("not a valid float. try again.")
             continue
         }
 
-        for {
-            fmt.print("\nwhat should the multiplier be changed to?\n[0-1]: ")
+        // load file, change the value, write file
 
-            buffer2: [512]byte
-            bytes_read2, _ := os.read(os.stdin, buffer2[:])
+        json_string, _ := os.read_entire_file_from_path(fmt.tprintf("%s%s.json", category_directory, selected_category), context.allocator)
+        defer delete(json_string)
+        category: Category
+        _ = json.unmarshal(json_string, &category)
 
-            s := string(buffer2[:bytes_read2-1])
-            multiplier, ok := strconv.parse_f32(s)
-            if !ok {
-                fmt.println("not a valid float. try again.")
-                continue
-            }
+        category.auto_add_multiplier = multiplier
 
-            // load file, change the value, write file
+        SaveCategoryJson(category, selected_category)
 
-            json_string, _ := os.read_entire_file_from_path(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1])), context.allocator)
-            defer delete(json_string)
-            category: Category
-            _ = json.unmarshal(json_string, &category)
-
-            category.auto_add_multiplier = multiplier
-
-            SaveCategoryJson(category, string(buffer[:bytes_read-1]))
-
-            fmt.println("multiplier edited.")
-            break
-        }
-
+        fmt.println("multiplier edited.")
         break
     }
 }
