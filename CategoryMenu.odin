@@ -24,13 +24,13 @@ CategoryMenu :: proc() {
 
         // parse user's answer
         if buffer[0] == byte('1') {
-            CreateCategory()
+            CreateCategoryMenu()
             break
         } else if buffer[0] == byte('2') {
-            DeleteCategory()
+            DeleteCategoryMenu()
             break
         } else if buffer[0] == byte('3') {
-            ChangeCategoryAutoAddMultiplier()
+            ChangeCategoryAutoAddMultiplierMenu()
             break
         } else {
             fmt.println("invalid selection. try again.")
@@ -40,7 +40,7 @@ CategoryMenu :: proc() {
 
 
 
-CreateCategory :: proc() {
+CreateCategoryMenu :: proc() {
 
     for {
         fmt.println("\nexisting categories:")
@@ -68,7 +68,7 @@ CreateCategory :: proc() {
 
 
 
-DeleteCategory :: proc() {
+DeleteCategoryMenu :: proc() {
 
     selected_category := MakeUserSelectCategory("specify what category to delete.\ndelete: ", false)
     defer delete(selected_category)
@@ -79,7 +79,7 @@ DeleteCategory :: proc() {
 
 
 
-ChangeCategoryAutoAddMultiplier :: proc() {
+ChangeCategoryAutoAddMultiplierMenu :: proc() {
 
     selected_category := MakeUserSelectCategory("specify what category to change the auto-add multiplier of.\ncategory: ", true)
     defer delete(selected_category)

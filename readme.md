@@ -7,6 +7,7 @@ This readme.md is very work-in-progress, since as of writing this the project is
 ---
 TODO:
 - make LoadCategory() sort the items according to the date in the created Category variable
+- remember that when printing all items in a category (or just when printing items in general) that you should do it with color, like you did with multiplier percentages
 - specify that you both add and remove money here. Adding is done with positive numbers, and removing (for purchases) is done with negative numbers
 - add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt
 - explain what last_calculated_sum is for
@@ -27,15 +28,4 @@ menu design and progress:
   + [2] delete a category
   + [3] change the auto-add percentage thing for a category
 
-json format for each category:
-[
-"auto_add_factor": 0.25,
-"items": [
-    "2026-07-05 -10000 banana",
-    "2026-07-06 -2 house",
-    "2026-07-07 3248923749827239847 won the lottery, yayyy"
-    ],
-"last_calculated_sum": 3248923749827229845
-]
-
-note that last_calculated_sum is just there in case the file is edited manually, for if this project isn't accessible. This is so that even without the money_logger program you can still have a good idea for how much money you have left. This value isn't actually used for anything
+note that last_calculated_sum is just there in case the file is edited manually, for if this project isn't accessible. This is so that even without the money_logger program you can still have a good idea for how much money you have left. This value isn't actually used for anything. Note that it should be calculated whenever the json file is ever updated

@@ -5,7 +5,6 @@ import "core:fmt"
 import "core:strings"
 import "core:encoding/json"
 import "core:strconv"
-import "core:time/datetime"
 
 
 Category :: struct {
@@ -17,7 +16,7 @@ Category :: struct {
 
 
 Item :: struct {
-    date: datetime.Date,
+    date: string,
     money_delta: f32,
     description: string
 }
@@ -212,4 +211,14 @@ MakeUserSelectCategory :: proc(instructions: string, show_multipliers: bool) -> 
 
         return strings.clone(string(buffer[:bytes_read-1]), context.allocator)
     }
+}
+
+
+
+IntToTwoRunes :: proc(num: int) -> (rune1, rune2: rune) {
+    // wackass procudure for just making a number have a trailing 0 if <=9, for ISO date bullshit
+
+    if num < 10 do return '0', '0' + rune(num)
+
+    return '0' + rune(num / 10), '0' + rune(num % 10)
 }
