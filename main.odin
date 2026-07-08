@@ -9,7 +9,7 @@ import "core:strconv"
 
 Category :: struct {
     auto_add_multiplier: f32,
-    items: []Item,
+    items: [dynamic]Item,
     last_calculated_sum: f32,
 }
 
@@ -18,7 +18,7 @@ Category :: struct {
 Item :: struct {
     date: string,
     money_delta: f32,
-    description: string
+    description: string,
 }
 
 
@@ -137,6 +137,7 @@ PrintExistingCategories :: proc(show_multipliers: bool) {
         if strings.has_suffix(entry.name, ".json") {
             base := strings.trim_suffix(entry.name, ".json")
             category := LoadCategory(base)
+            defer delete(category.items)
 
             if show_multipliers {
                 fmt.println(fmt.tprintf("    %s: %s%d%%%s", base, GetColor(.CYAN), int(category.auto_add_multiplier * 100 + 0.5), GetColor(.RESET)))
@@ -160,16 +161,16 @@ GetCategoryPath :: proc(category_name: string) -> string {
 
 
 
-SaveCategoryJson :: proc(category: Category, category_name: string) {
+SaveCategoryJson :: proc(category: ^Category, category_name: string) {
     data, _ := json.marshal(
-        category,
+        category^,
         json.Marshal_Options{
             pretty = true,
         }
     )
     defer delete(data)
 
-    results := os.write_entire_file(GetCategoryPath(category_name), data)
+    _ = os.write_entire_file(GetCategoryPath(category_name), data)
 }
 
 
@@ -221,4 +222,17 @@ IntToTwoRunes :: proc(num: int) -> (rune1, rune2: rune) {
     if num < 10 do return '0', '0' + rune(num)
 
     return '0' + rune(num / 10), '0' + rune(num % 10)
+}
+
+
+
+AddItemToCategory :: proc(category: ^Category, category_name: string, date: string, money_delta: f32, description: string) {
+    append(&category.items,
+           Item{
+               date,
+               money_delta,
+               description,
+           }
+          )
+    SaveCategoryJson(category, category_name)
 }

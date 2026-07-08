@@ -115,4 +115,9 @@ AddItemMenu :: proc() {
     buffer: [8192]byte
     bytes_read, _ := os.read(os.stdin, buffer[:])
     description := string(buffer[:bytes_read-1])
+
+    category := LoadCategory(selected_category)
+    defer delete(category.items)
+
+    AddItemToCategory(&category, selected_category, date, money_delta, description)
 }

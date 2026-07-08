@@ -6,7 +6,8 @@ This readme.md is very work-in-progress, since as of writing this the project is
 
 ---
 TODO:
-- make LoadCategory() sort the items according to the date in the created Category variable
+- make AddItemToCategory also update the last calculated sum before the json is saved
+- (NEVERMIND! Do this with SaveCategory() or whatever the function is/will be called) make LoadCategory() sort the items according to the date in the created Category variable
 - remember that when printing all items in a category (or just when printing items in general) that you should do it with color, like you did with multiplier percentages
 - specify that you both add and remove money here. Adding is done with positive numbers, and removing (for purchases) is done with negative numbers
 - add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt
@@ -15,7 +16,7 @@ TODO:
 
 menu design and progress:
 - (WIP) [1] add/remove items
-  + (WIP) [1] add item to a category
+  + [1] add item to a category
   + (WIP) [2] add item to all categories with the amount of money being divided according to the percentage specified in each category (the rest goes into savings) (remember that itemr with a multiplier of 0 should not have items generated for it, and there should not be a status thing saying anything, as it having a value of 0 does not need to be logged)
   + (WIP) [3] delete item. Note that you should probably not store the ID of items, so that it is easier to add items when manually editing the file. Just make it sort them with the dates whenever the files are saved. IDs will be given during runtime though so that you know which one to delete. Deleting should probably list every item, but with an ID given on the left of each item.
 - (WIP) [2] get info

@@ -60,7 +60,7 @@ CreateCategoryMenu :: proc() {
         }
 
         new_category := Category{0, {}, 0}
-        SaveCategoryJson(new_category, string(buffer[:bytes_read-1]))
+        SaveCategoryJson(&new_category, string(buffer[:bytes_read-1]))
         fmt.println("category created.")
         break
     }
@@ -106,7 +106,7 @@ ChangeCategoryAutoAddMultiplierMenu :: proc() {
 
         category.auto_add_multiplier = multiplier
 
-        SaveCategoryJson(category, selected_category)
+        SaveCategoryJson(&category, selected_category)
 
         fmt.println("multiplier edited.")
         break
