@@ -163,6 +163,10 @@ GetCategoryPath :: proc(category_name: string) -> string {
 
 
 SaveCategoryJson :: proc(category: ^Category, category_name: string) {
+
+    // ensure that the last calculated sum is up to date
+    category.last_calculated_sum = GetSumOfItemList(&category.items)
+    
     data, _ := json.marshal(
         category^,
         json.Marshal_Options{
@@ -304,7 +308,7 @@ IntToTwoRunes :: proc(num: int) -> (rune1, rune2: rune) {
 
 
 
-AddItemToCategory :: proc(category: ^Category, category_name: string, date: string, money_delta: f32, description: string) {
+AddItemToCategoryAndSave :: proc(category: ^Category, category_name: string, date: string, money_delta: f32, description: string) {
 
     append(&category.items,
            Item{
@@ -314,8 +318,6 @@ AddItemToCategory :: proc(category: ^Category, category_name: string, date: stri
            }
           )
 
-    category.last_calculated_sum = GetSumOfItemList(&category.items)
-    
     SaveCategoryJson(category, category_name)
 }
 

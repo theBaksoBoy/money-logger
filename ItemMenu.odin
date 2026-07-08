@@ -28,7 +28,7 @@ ItemMenu :: proc() {
             AddItemMenu()
             break
         } else if buffer[0] == byte('2') {
-            fmt.println("WIP--------------------------------------------------")
+            AutoAddItemMenu()
             break
         } else if buffer[0] == byte('3') {
             fmt.println("WIP--------------------------------------------------")
@@ -52,5 +52,38 @@ AddItemMenu :: proc() {
     category := LoadCategory(selected_category)
     defer delete(category.items)
 
-    AddItemToCategory(&category, selected_category, date, money_delta, description)
+    AddItemToCategoryAndSave(&category, selected_category, date, money_delta, description)
+}
+
+
+
+AutoAddItemMenu :: proc() {
+    
+    money_delta, date, description := MakeUserChoseItemParameters()
+
+    remaining_multiplier: f32 = 1
+
+    dir, _ := os.open(category_directory)
+    defer os.close(dir)
+    entries, _ := os.read_dir(dir, 1024, context.allocator)
+    defer delete(entries)
+
+    for entry in entries {
+        if strings.has_suffix(entry.name, ".json") {
+            base := strings.trim_suffix(entry.name, ".json")
+            category := LoadCategory(base)
+            defer delete(category.items)
+
+            // skip category if it's auto-add multiplier is 0, as items don't need to be auto-added to these categories
+            if category.auto_add_multiplier == 0 do continue
+
+            money_in_item := money_delta * category.auto_add_multiplier
+            AddItemToCategoryAndSave(&category, base, date, money_in_item, description)
+            remaining_multiplier -= category.auto_add_multiplier
+
+            fmt.println(fmt.tprintf("    %s: %s%.2f%s", base, GetColor(.CYAN), money_in_item, GetColor(.RESET)))
+        }
+    }
+
+    fmt.println(fmt.tprintf("    (in total %s%.2f%s was dispursed to categories. %s%.2f%s remains, and goes into savings)", GetColor(.CYAN), money_delta * (1-remaining_multiplier), GetColor(.RESET), GetColor(.CYAN), money_delta * remaining_multiplier, GetColor(.RESET)))
 }
