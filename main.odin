@@ -5,6 +5,7 @@ import "core:fmt"
 import "core:strings"
 import "core:encoding/json"
 import "core:strconv"
+import "core:time"
 
 
 Category :: struct {
@@ -212,6 +213,83 @@ MakeUserSelectCategory :: proc(instructions: string, show_multipliers: bool) -> 
 
         return strings.clone(string(buffer[:bytes_read-1]), context.allocator)
     }
+}
+
+
+
+// ask the user to fill in details about an item to be created, in regards to its money delta, date, and description
+MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta, date, description)
+    
+    // get the money delta of the item
+    money_delta: f32
+    for {
+        fmt.print("\nspecify money delta\nnegative values are used when you spend money\npositive values are used when gaining money\nmoney delta: ")
+
+        buffer: [512]byte
+        bytes_read, _ := os.read(os.stdin, buffer[:])
+
+        s := string(buffer[:bytes_read-1])
+
+        float_input, ok := strconv.parse_f32(s)
+        if !ok {
+            fmt.println("not a valid float. try again.")
+            continue
+        }
+
+        money_delta = float_input
+        break
+    }
+
+    // get date for the item
+    current_time := time.now()
+    month1, month2 := IntToTwoRunes(int(time.month(time.now())))
+    day1, day2 := IntToTwoRunes(int(time.day(time.now())))
+    date: string = fmt.tprintf("%d-%c%c-%c%c", time.year(time.now()), month1, month2, day1, day2)
+    outer: for {
+        fmt.print("\nspecify date for the item. leave blank to automatically select today's date. make sure that the date is valid as idfk how to code this shit in Odin\n[YYYY-MM-DD]: ")
+
+        buffer: [512]byte
+        bytes_read, _ := os.read(os.stdin, buffer[:])
+
+        input_date := string(buffer[:bytes_read-1])
+
+        if input_date == "" {
+            break
+        }
+
+        if bytes_read != 11 {
+            fmt.println("inputted date is in the incorrect format. try again.")
+            continue
+        }
+
+        // very basic validation of date
+        for letter, i in input_date {
+            if i == 4 || i == 7 {
+                if letter != '-' {
+                    fmt.println("inputted date is in the incorrect format. try again.")
+                    continue outer
+                }
+            } else {
+                // (expert coding)
+                if letter != '0' && letter != '1' && letter != '2' && letter != '3' && letter != '4' && letter != '5' && letter != '6' && letter != '7' && letter != '8' && letter != '9' {
+                    fmt.println("inputted date is in the incorrect format. try again.")
+                    continue outer
+                }
+            }
+        }
+
+        date = input_date
+        break
+    }
+
+    // get description for the item
+    fmt.print("\nwrite the description for the item\n: ")
+
+    buffer: [8192]byte
+    bytes_read, _ := os.read(os.stdin, buffer[:])
+    description := string(buffer[:bytes_read-1])
+
+    return money_delta, strings.clone(date, context.allocator), strings.clone(description, context.allocator)
 }
 
 
