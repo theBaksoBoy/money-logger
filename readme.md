@@ -6,11 +6,10 @@ This readme.md is very work-in-progress, since as of writing this the project is
 
 ---
 TODO:
-- make AddItemToCategory also update the last calculated sum before the json is saved
-- (NEVERMIND! Do this with SaveCategory() or whatever the function is/will be called) make LoadCategory() sort the items according to the date in the created Category variable
+- make SaveCategoryJson() sort the items according to the date before saving to file
 - remember that when printing all items in a category (or just when printing items in general) that you should do it with color, like you did with multiplier percentages
-- specify that you both add and remove money here. Adding is done with positive numbers, and removing (for purchases) is done with negative numbers
-- add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt
+- specify that you both add and remove money in this readme file when adding an item. Adding is done with positive numbers, and removing (for purchases) is done with negative numbers
+- add instructions for how to run it. Specify that you need stuff in ~/.config/money_logger/settings.txt, and how it should look.
 - explain what last_calculated_sum is for
 - explain what the auto_add_multiplier is for
 

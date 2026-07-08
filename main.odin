@@ -227,6 +227,7 @@ IntToTwoRunes :: proc(num: int) -> (rune1, rune2: rune) {
 
 
 AddItemToCategory :: proc(category: ^Category, category_name: string, date: string, money_delta: f32, description: string) {
+
     append(&category.items,
            Item{
                date,
@@ -234,5 +235,19 @@ AddItemToCategory :: proc(category: ^Category, category_name: string, date: stri
                description,
            }
           )
+
+    category.last_calculated_sum = GetSumOfItemList(&category.items)
+    
     SaveCategoryJson(category, category_name)
+}
+
+
+
+GetSumOfItemList :: proc(items: ^[dynamic]Item) -> f32 {
+    sum: f32
+    for item in items {
+        sum += item.money_delta
+    }
+
+    return sum
 }
