@@ -27,7 +27,7 @@ InfoMenu :: proc() {
 
         // parse user's answer
         if buffer[0] == byte('1') {
-            fmt.println("WIP---------------------")
+            ListItemsInCategoryMenu()
             break
         } else if buffer[0] == byte('2') {
             GetSumMenu()
@@ -42,6 +42,19 @@ InfoMenu :: proc() {
             fmt.println("invalid selection. try again.")
         }
     }
+}
+
+
+
+ListItemsInCategoryMenu :: proc() {
+    
+    selected_category := MakeUserSelectCategory("view items in which category?\ncategory: ", false)
+    defer delete(selected_category)
+    category := LoadCategory(selected_category)
+    defer delete(category.items)
+
+    fmt.println()
+    ListItems(&category.items, false)
 }
 
 

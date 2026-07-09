@@ -295,7 +295,7 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
     }
 
     // get description for the item
-    fmt.print("\nwrite the description for the item\n: ")
+    fmt.print("\nwrite a description for the item (optional)\n: ")
 
     buffer: [8192]byte
     fmt.print(GetColor(.GREEN))
@@ -340,4 +340,27 @@ GetSumOfItemList :: proc(items: ^[dynamic]Item) -> f32 {
     }
 
     return sum
+}
+
+
+
+ListItems :: proc(items: ^[dynamic]Item, include_item_index: bool) {
+
+    for item, i in items {
+
+        // print index
+        if include_item_index {
+            fmt.print(fmt.tprintf("[%s%d%s] ", GetColor(.BLUE), i, GetColor(.RESET)))
+        }
+
+        // print date and money delta
+        fmt.print(fmt.tprintf("%s%s%s : %s%.2f%s", GetColor(.YELLOW), item.date, GetColor(.RESET), GetColor(.CYAN), item.money_delta, GetColor(.RESET)))
+        
+        // print description if there is one
+        if item.description != "" {
+            fmt.print(" :", item.description)
+        }
+
+        fmt.println()
+    }
 }
