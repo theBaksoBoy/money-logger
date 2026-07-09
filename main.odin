@@ -6,6 +6,7 @@ import "core:strings"
 import "core:encoding/json"
 import "core:strconv"
 import "core:time"
+import "core:slice"
 
 
 Category :: struct {
@@ -173,6 +174,12 @@ SaveCategoryJson :: proc(category: ^Category, category_name: string) {
     // ensure that the last calculated sum is up to date
     category.last_calculated_sum = GetSumOfItemList(&category.items)
     
+    // sort the item list according to the date of the items
+    slice.sort_by(category.items[:], proc(a, b: Item) -> bool {
+        return strings.compare(a.date, b.date) < 0
+    })
+
+
     data, _ := json.marshal(
         category^,
         json.Marshal_Options{
