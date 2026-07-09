@@ -105,7 +105,9 @@ LoadConfigFile :: proc() {
     // is this really the right way to do this? It feels fucked up.
 
     if err != os.ERROR_NONE {
+        fmt.print(GetColor(.RED))
         fmt.println("could not open ~/.config/money_logger/settings.txt\ndoes it exist?")
+        fmt.print(GetColor(.RESET))
         os.exit(1)
     }
 
@@ -186,7 +188,9 @@ LoadCategory :: proc(category_name: string) -> Category {
 
     json_string, err := os.read_entire_file_from_path(GetCategoryPath(category_name), context.allocator)
     if err != nil {
+        fmt.print(GetColor(.RED))
         fmt.println(fmt.tprintf("error reading the json file %s.json:", category_name), err)
+        fmt.print(GetColor(.RESET))
         os.exit(1)
     }
     defer delete(json_string)
@@ -194,7 +198,9 @@ LoadCategory :: proc(category_name: string) -> Category {
     unmarshal_err := json.unmarshal(json_string, &category)
     if unmarshal_err != nil {
         fmt.println(fmt.tprintf("error parsing the json file %s.json:", category_name), err)
+        fmt.print(GetColor(.RED))
         os.exit(1)
+        fmt.print(GetColor(.RESET))
     }
 
     return category
