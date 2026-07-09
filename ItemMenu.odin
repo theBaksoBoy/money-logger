@@ -55,6 +55,8 @@ AddItemMenu :: proc() {
     defer delete(category.items)
 
     AddItemToCategoryAndSave(&category, selected_category, date, money_delta, description)
+
+    fmt.println("\nitem added")
 }
 
 
