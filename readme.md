@@ -20,7 +20,7 @@ menu design and progress:
   + *(WIP)* [3] delete item. Note that you should probably not store the ID of items, so that it is easier to add items when manually editing the file. Just make it sort them with the dates whenever the files are saved. IDs will be given during runtime though so that you know which one to delete. Deleting should probably list every item, but with an ID given on the left of each item.
 - [2] get info
   + *(WIP)* [1] list all items in a category
-  + *(WIP)* [2] get the sum of a category (note that you already have a function for this)
+  + [2] get the sum of a category (note that you already have a function for this)
   + *(WIP)* [3] make a graph of a category's sum (are you still going to have this feature? It would be pretty neat if you can)
   + [4] get the percentage of money that goes into each category when using the auto-add thing
 - [3] manage categories

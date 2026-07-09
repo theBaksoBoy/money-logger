@@ -28,7 +28,7 @@ InfoMenu :: proc() {
             fmt.println("WIP---------------------")
             break
         } else if buffer[0] == byte('2') {
-            fmt.println("WIP---------------------")
+            GetSumMenu()
             break
         } else if buffer[0] == byte('3') {
             fmt.println("WIP---------------------")
@@ -40,4 +40,16 @@ InfoMenu :: proc() {
             fmt.println("invalid selection. try again.")
         }
     }
+}
+
+
+
+GetSumMenu :: proc() {
+    
+    selected_category := MakeUserSelectCategory("view remaining funds of which category?\ncategory: ", false)
+    defer delete(selected_category)
+    category := LoadCategory(selected_category)
+    defer delete(category.items)
+
+    fmt.println(fmt.tprintf("    remaining sum: %s%.2f%s", GetColor(.CYAN), GetSumOfItemList(&category.items), GetColor(.RESET)))
 }
