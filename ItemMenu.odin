@@ -36,7 +36,9 @@ ItemMenu :: proc() {
             fmt.println("WIP--------------------------------------------------")
             break
         } else {
+            fmt.print(GetColor(.RED))
             fmt.println("invalid selection. try again.")
+            fmt.print(GetColor(.RESET))
         }
     }
 }

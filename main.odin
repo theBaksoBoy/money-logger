@@ -88,7 +88,9 @@ MainMenu :: proc() {
             CategoryMenu()
             break
         } else {
+            fmt.print(GetColor(.RED))
             fmt.println("invalid selection. try again.")
+            fmt.print(GetColor(.RESET))
         }
     }
 }
@@ -197,10 +199,10 @@ LoadCategory :: proc(category_name: string) -> Category {
     category: Category
     unmarshal_err := json.unmarshal(json_string, &category)
     if unmarshal_err != nil {
-        fmt.println(fmt.tprintf("error parsing the json file %s.json:", category_name), err)
         fmt.print(GetColor(.RED))
-        os.exit(1)
+        fmt.println(fmt.tprintf("error parsing the json file %s.json:", category_name), err)
         fmt.print(GetColor(.RESET))
+        os.exit(1)
     }
 
     return category
@@ -221,7 +223,9 @@ MakeUserSelectCategory :: proc(instructions: string, show_multipliers: bool) -> 
         fmt.print(GetColor(.RESET))
 
         if !os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
+            fmt.print(GetColor(.RED))
             fmt.println("category does not exist. try again.")
+            fmt.print(GetColor(.RESET))
             continue
         }
 
@@ -248,7 +252,9 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
 
         float_input, ok := strconv.parse_f32(s)
         if !ok {
+            fmt.print(GetColor(.RED))
             fmt.println("not a valid float. try again.")
+            fmt.print(GetColor(.RESET))
             continue
         }
 
@@ -276,7 +282,9 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
         }
 
         if bytes_read != 11 {
+            fmt.print(GetColor(.RED))
             fmt.println("inputted date is in the incorrect format. try again.")
+            fmt.print(GetColor(.RESET))
             continue
         }
 
@@ -284,13 +292,17 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
         for letter, i in input_date {
             if i == 4 || i == 7 {
                 if letter != '-' {
+                    fmt.print(GetColor(.RED))
                     fmt.println("inputted date is in the incorrect format. try again.")
+                    fmt.print(GetColor(.RESET))
                     continue outer
                 }
             } else {
                 // (expert coding)
                 if letter != '0' && letter != '1' && letter != '2' && letter != '3' && letter != '4' && letter != '5' && letter != '6' && letter != '7' && letter != '8' && letter != '9' {
+                    fmt.print(GetColor(.RED))
                     fmt.println("inputted date is in the incorrect format. try again.")
+                    fmt.print(GetColor(.RESET))
                     continue outer
                 }
             }

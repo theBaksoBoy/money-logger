@@ -35,7 +35,9 @@ CategoryMenu :: proc() {
             ChangeCategoryAutoAddMultiplierMenu()
             break
         } else {
+            fmt.print(GetColor(.RED))
             fmt.println("invalid selection. try again.")
+            fmt.print(GetColor(.RESET))
         }
     }
 }
@@ -54,12 +56,16 @@ CreateCategoryMenu :: proc() {
         fmt.print(GetColor(.RESET))
 
         if buffer[0] == byte('\n') {
+            fmt.print(GetColor(.RED))
             fmt.println("category name can not be empty. try again.")
+            fmt.print(GetColor(.RESET))
             continue
         }
 
         if os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
+            fmt.print(GetColor(.RED))
             fmt.println("category with specified name already exists. try again.")
+            fmt.print(GetColor(.RESET))
             continue
         }
 
@@ -99,7 +105,9 @@ ChangeCategoryAutoAddMultiplierMenu :: proc() {
         s := string(buffer[:bytes_read-1])
         multiplier, ok := strconv.parse_f32(s)
         if !ok {
+            fmt.print(GetColor(.RED))
             fmt.println("not a valid float. try again.")
+            fmt.print(GetColor(.RESET))
             continue
         }
 

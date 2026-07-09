@@ -39,7 +39,9 @@ InfoMenu :: proc() {
             PrintExistingCategories(true)
             break
         } else {
+            fmt.print(GetColor(.RED))
             fmt.println("invalid selection. try again.")
+            fmt.print(GetColor(.RESET))
         }
     }
 }
