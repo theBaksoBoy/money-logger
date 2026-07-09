@@ -132,7 +132,7 @@ LoadConfigFile :: proc() {
 
 
 
-PrintExistingCategories :: proc(show_multipliers: bool) {
+PrintExistingCategories :: proc(show_multipliers: bool, error_if_no_categories_exist: bool = true) {
 
     remaining_multiplier: f32 = 1
 
@@ -160,7 +160,7 @@ PrintExistingCategories :: proc(show_multipliers: bool) {
         }
     }
 
-    if category_count == 0 {
+    if category_count == 0 && error_if_no_categories_exist{
         fmt.print(GetColor(.RED))
         fmt.println("no categories exist")
         fmt.print(GetColor(.RESET))

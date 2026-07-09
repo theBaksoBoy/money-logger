@@ -48,7 +48,7 @@ CreateCategoryMenu :: proc() {
 
     for {
         fmt.println("\nexisting categories:")
-        PrintExistingCategories(false)
+        PrintExistingCategories(false, false)
         fmt.print("specify the name of the new category. note that it has to be a valid file name, so no special characters like slashes\nname: ")
         buffer: [512]byte
         fmt.print(GetColor(.GREEN))
