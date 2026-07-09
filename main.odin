@@ -141,6 +141,8 @@ PrintExistingCategories :: proc(show_multipliers: bool) {
     entries, _ := os.read_dir(dir, 1024, context.allocator)
     defer delete(entries)
 
+    category_count: int = 0
+    
     for entry in entries {
         if strings.has_suffix(entry.name, ".json") {
             base := strings.trim_suffix(entry.name, ".json")
@@ -153,7 +155,16 @@ PrintExistingCategories :: proc(show_multipliers: bool) {
             } else {
                 fmt.println(fmt.tprintf("    %s", base))
             }
+
+            category_count += 1
         }
+    }
+
+    if category_count == 0 {
+        fmt.print(GetColor(.RED))
+        fmt.println("no categories exist")
+        fmt.print(GetColor(.RESET))
+        os.exit(1)
     }
 
     if show_multipliers {
