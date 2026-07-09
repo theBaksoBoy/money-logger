@@ -20,7 +20,9 @@ CategoryMenu :: proc() {
 
         // get user's answer
         buffer: [128]byte
+        fmt.print(GetColor(.GREEN))
         _, _ = os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         // parse user's answer
         if buffer[0] == byte('1') {
@@ -47,7 +49,9 @@ CreateCategoryMenu :: proc() {
         PrintExistingCategories(false)
         fmt.print("specify the name of the new category. note that it has to be a valid file name, so no special characters like slashes\nname: ")
         buffer: [512]byte
+        fmt.print(GetColor(.GREEN))
         bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         if buffer[0] == byte('\n') {
             fmt.println("category name can not be empty. try again.")
@@ -88,7 +92,9 @@ ChangeCategoryAutoAddMultiplierMenu :: proc() {
         fmt.print("\nwhat should the multiplier be changed to?\n[0-1]: ")
 
         buffer: [512]byte
+        fmt.print(GetColor(.GREEN))
         bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         s := string(buffer[:bytes_read-1])
         multiplier, ok := strconv.parse_f32(s)

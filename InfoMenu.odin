@@ -21,7 +21,9 @@ InfoMenu :: proc() {
 
         // get user's answer
         buffer: [128]byte
+        fmt.print(GetColor(.GREEN))
         _, _ = os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         // parse user's answer
         if buffer[0] == byte('1') {

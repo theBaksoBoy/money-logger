@@ -73,7 +73,9 @@ MainMenu :: proc() {
 
         // get user's answer
         buffer: [128]byte
+        fmt.print(GetColor(.GREEN))
         _, _ = os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         // parse user's answer
         if buffer[0] == byte('1') {
@@ -208,7 +210,9 @@ MakeUserSelectCategory :: proc(instructions: string, show_multipliers: bool) -> 
         fmt.print(instructions)
 
         buffer: [512]byte
+        fmt.print(GetColor(.GREEN))
         bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         if !os.exists(fmt.tprintf("%s%s.json", category_directory, string(buffer[:bytes_read-1]))) {
             fmt.println("category does not exist. try again.")
@@ -230,7 +234,9 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
         fmt.print("\nspecify money delta\nnegative values are used when you spend money\npositive values are used when gaining money\nmoney delta: ")
 
         buffer: [512]byte
+        fmt.print(GetColor(.GREEN))
         bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         s := string(buffer[:bytes_read-1])
 
@@ -253,7 +259,9 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
         fmt.print("\nspecify date for the item. leave blank to automatically select today's date. make sure that the date is valid as idfk how to code this shit in Odin\n[YYYY-MM-DD]: ")
 
         buffer: [512]byte
+        fmt.print(GetColor(.GREEN))
         bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
 
         input_date := string(buffer[:bytes_read-1])
 
@@ -290,7 +298,9 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
     fmt.print("\nwrite the description for the item\n: ")
 
     buffer: [8192]byte
+    fmt.print(GetColor(.GREEN))
     bytes_read, _ := os.read(os.stdin, buffer[:])
+    fmt.print(GetColor(.RESET))
     description := string(buffer[:bytes_read-1])
 
     return money_delta, strings.clone(date, context.allocator), strings.clone(description, context.allocator)
