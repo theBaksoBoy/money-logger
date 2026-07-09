@@ -17,7 +17,7 @@ menu design and progress:
 - [1] add/remove items
   + [1] add item to a category
   + [2] add item to all categories with the amount of money being divided according to the percentage specified in each category (the rest goes into savings) (remember that itemr with a multiplier of 0 should not have items generated for it, and there should not be a status thing saying anything, as it having a value of 0 does not need to be logged)
-  + *(WIP)* [3] delete item. Note that you should probably not store the ID of items, so that it is easier to add items when manually editing the file. Just make it sort them with the dates whenever the files are saved. IDs will be given during runtime though so that you know which one to delete. Deleting should probably list every item, but with an ID given on the left of each item.
+  + [3] delete item. Note that you should probably not store the ID of items, so that it is easier to add items when manually editing the file. Just make it sort them with the dates whenever the files are saved. IDs will be given during runtime though so that you know which one to delete. Deleting should probably list every item, but with an ID given on the left of each item.
 - [2] get info
   + [1] list all items in a category
   + [2] get the sum of a category (note that you already have a function for this)

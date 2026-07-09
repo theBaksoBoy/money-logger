@@ -241,7 +241,7 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
     // get the money delta of the item
     money_delta: f32
     for {
-        fmt.print("\nspecify money delta\nnegative values are used when you spend money\npositive values are used when gaining money\nmoney delta: ")
+        fmt.print("\nspecify money delta\nnegative values are used when you spend money\npositive values are used when gaining money\n[money delta]: ")
 
         buffer: [512]byte
         fmt.print(GetColor(.GREEN))
@@ -381,4 +381,16 @@ ListItems :: proc(items: ^[dynamic]Item, include_item_index: bool) {
 
         fmt.println()
     }
+}
+
+
+
+RemoveItemFromCategoryAndSave :: proc(category: ^Category, index_to_remove: int, category_name: string) {
+
+    // some bullshit needed to have an ordered remove instead of unordered_remove()
+    // gonna be honest I have no fucking idea how this works
+    copy(category.items[index_to_remove:], category.items[index_to_remove+1:])
+    resize(&category.items, len(category.items) - 1)
+
+    SaveCategoryJson(category, category_name)
 }

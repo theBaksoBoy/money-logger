@@ -33,7 +33,7 @@ ItemMenu :: proc() {
             AutoAddItemMenu()
             break
         } else if buffer[0] == byte('3') {
-            fmt.println("WIP--------------------------------------------------")
+            DeleteItemMenu()
             break
         } else {
             fmt.print(GetColor(.RED))
@@ -92,4 +92,50 @@ AutoAddItemMenu :: proc() {
     }
 
     fmt.println(fmt.tprintf("    (in total %s%.2f%s was dispursed to categories. %s%.2f%s remains, and goes into savings)", GetColor(.CYAN), money_delta * (1-remaining_multiplier), GetColor(.RESET), GetColor(.CYAN), money_delta * remaining_multiplier, GetColor(.RESET)))
+}
+
+
+
+DeleteItemMenu :: proc() {
+
+    selected_category := MakeUserSelectCategory("delete items in which category?\ncategory: ", false)
+    defer delete(selected_category)
+    category := LoadCategory(selected_category)
+    defer delete(category.items)
+
+    fmt.println()
+    ListItems(&category.items, true)
+
+    index_to_remove: int
+    for {
+        fmt.print("\nspecify index of item to delete\n[index]: ")
+
+        buffer: [512]byte
+        fmt.print(GetColor(.GREEN))
+        bytes_read, _ := os.read(os.stdin, buffer[:])
+        fmt.print(GetColor(.RESET))
+
+        s := string(buffer[:bytes_read-1])
+
+        int_input, ok := strconv.parse_int(s)
+        if !ok {
+            fmt.print(GetColor(.RED))
+            fmt.println("not a valid integer. try again.")
+            fmt.print(GetColor(.RESET))
+            continue
+        }
+        if int_input < 0 || int_input >= len(category.items) {
+            fmt.print(GetColor(.RED))
+            fmt.println("specified index is out of bounds. try again.")
+            fmt.print(GetColor(.RESET))
+            continue
+        }
+
+        index_to_remove = int_input
+        break
+    }
+
+    RemoveItemFromCategoryAndSave(&category, index_to_remove, selected_category)
+
+    fmt.println("\nitem removed")
 }
