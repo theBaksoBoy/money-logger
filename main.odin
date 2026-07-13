@@ -131,7 +131,7 @@ LoadConfigFile :: proc() {
                 os.exit(1)
             }
             if n < 20 {
-                fmt.println("graph_width in the config is too small")
+                fmt.println("warning: graph_width in the config is most likely too small")
             }
             graph_width = n
         }
@@ -143,7 +143,7 @@ LoadConfigFile :: proc() {
                 os.exit(1)
             }
             if n < 10 {
-                fmt.println("graph_height in the config is too small")
+                fmt.println("warning: graph_height in the config is most likely too small")
             }
             graph_height = n
         }
