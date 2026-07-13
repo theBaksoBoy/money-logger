@@ -52,6 +52,7 @@ GetColor :: proc(color: Color) -> string {
 }
 
 
+// variables assigned during config file parsing
 category_directory: string // directory that all the different categories are in
 graph_width: int // amount of characters used for the width when printing the graph
 graph_height: int // amount of lines used for the height when printing the graph
@@ -211,11 +212,7 @@ SaveCategoryJson :: proc(category: ^Category, category_name: string) {
     // ensure that the last calculated sum is up to date
     category.last_calculated_sum = GetSumOfItemList(&category.items)
     
-    // sort the item list according to the date of the items
-    slice.sort_by(category.items[:], proc(a, b: Item) -> bool {
-        return strings.compare(a.date, b.date) < 0
-    })
-
+    SortCategory(category)
 
     data, _ := json.marshal(
         category^,
@@ -226,6 +223,16 @@ SaveCategoryJson :: proc(category: ^Category, category_name: string) {
     defer delete(data)
 
     _ = os.write_entire_file(GetCategoryPath(category_name), data)
+}
+
+
+
+SortCategory :: proc(category: ^Category) {
+    
+    // sort the item list according to the date of the items
+    slice.sort_by(category.items[:], proc(a, b: Item) -> bool {
+        return strings.compare(a.date, b.date) < 0
+    })
 }
 
 
@@ -310,9 +317,27 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
     current_time := time.now()
     month1, month2 := IntToTwoRunes(int(time.month(time.now())))
     day1, day2 := IntToTwoRunes(int(time.day(time.now())))
-    date: string = fmt.tprintf("%d-%c%c-%c%c", time.year(time.now()), month1, month2, day1, day2)
+    date: string = MakeUserChoseDate("\nspecify date for the item. leave blank to automatically select today's date. make sure that the date is valid as idfk how to code this shit in Odin\n[YYYY-MM-DD]: ", fmt.tprintf("%d-%c%c-%c%c", time.year(time.now()), month1, month2, day1, day2))
+    defer delete(date)
+
+    // get description for the item
+    fmt.print("\nwrite a description for the item (optional)\n: ")
+
+    buffer: [8192]byte
+    fmt.print(GetColor(.GREEN))
+    bytes_read, _ := os.read(os.stdin, buffer[:])
+    fmt.print(GetColor(.RESET))
+    description := string(buffer[:bytes_read-1])
+
+    return money_delta, strings.clone(date, context.allocator), strings.clone(description, context.allocator)
+}
+
+
+
+MakeUserChoseDate :: proc(instruction_string: string, default_value: string) -> string {
+    
     outer: for {
-        fmt.print("\nspecify date for the item. leave blank to automatically select today's date. make sure that the date is valid as idfk how to code this shit in Odin\n[YYYY-MM-DD]: ")
+        fmt.print(instruction_string)
 
         buffer: [512]byte
         fmt.print(GetColor(.GREEN))
@@ -322,7 +347,7 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
         input_date := string(buffer[:bytes_read-1])
 
         if input_date == "" {
-            break
+            return default_value
         }
 
         if bytes_read != 11 {
@@ -352,20 +377,8 @@ MakeUserChoseItemParameters :: proc() -> (f32, string, string) { // (money_delta
             }
         }
 
-        date = input_date
-        break
+        return strings.clone(input_date)
     }
-
-    // get description for the item
-    fmt.print("\nwrite a description for the item (optional)\n: ")
-
-    buffer: [8192]byte
-    fmt.print(GetColor(.GREEN))
-    bytes_read, _ := os.read(os.stdin, buffer[:])
-    fmt.print(GetColor(.RESET))
-    description := string(buffer[:bytes_read-1])
-
-    return money_delta, strings.clone(date, context.allocator), strings.clone(description, context.allocator)
 }
 
 

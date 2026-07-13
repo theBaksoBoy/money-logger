@@ -33,7 +33,7 @@ InfoMenu :: proc() {
             GetSumMenu()
             break
         } else if buffer[0] == byte('3') {
-            fmt.println("WIP---------------------")
+            GraphMenu()
             break
         } else if buffer[0] == byte('4') {
             PrintExistingCategories(true)
@@ -69,4 +69,21 @@ GetSumMenu :: proc() {
     defer delete(category.items)
 
     fmt.println(fmt.tprintf("    remaining sum: %s%.2f%s", GetColor(.CYAN), GetSumOfItemList(&category.items), GetColor(.RESET)))
+}
+
+
+
+GraphMenu :: proc() {
+
+    selected_category := MakeUserSelectCategory("show graph of which category?\ncategory: ", false)
+    defer delete(selected_category)
+    category := LoadCategory(selected_category)
+    defer delete(category.items)
+
+    start_date := MakeUserChoseDate("\nspecify starting date for the graph. leave blank to select the first item. make sure that the date is valid as idfk how to code this shit in Odin\n[YYYY-MM-DD]: ", "")
+    defer delete(start_date)
+    end_date := MakeUserChoseDate("\nspecify end date for the graph. leave blank to select the last item. make sure that the date is valid as idfk how to code this shit in Odin\n[YYYY-MM-DD]: ", "")
+    defer delete(end_date)
+
+    PrintGraph(&category, start_date, end_date)
 }
