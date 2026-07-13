@@ -52,7 +52,9 @@ GetColor :: proc(color: Color) -> string {
 }
 
 
-category_directory: string = "" // directory that all the different categories are in
+category_directory: string // directory that all the different categories are in
+graph_width: int // amount of characters used for the width when printing the graph
+graph_height: int // amount of lines used for the height when printing the graph
 
 main :: proc() {
     LoadConfigFile()
@@ -105,7 +107,6 @@ LoadConfigFile :: proc() {
     path := fmt.tprintf("%s/.config/money_logger/settings.txt", home_dir)
     data, err := os.read_entire_file_from_path(path, context.allocator)
     defer delete(data)
-    // is this really the right way to do this? It feels fucked up.
 
     if err != os.ERROR_NONE {
         fmt.print(GetColor(.RED))
@@ -118,8 +119,33 @@ LoadConfigFile :: proc() {
 
     // go through file and set variables to what is specified in the config
     for line in strings.split(file_string, "\n") {
+
         if strings.has_prefix(line, "category_directory=") {
             category_directory = line[len("category_directory="):]
+        }
+
+        if strings.has_prefix(line, "graph_width=") {
+            n, ok := strconv.parse_int(line[len("graph_width="):])
+            if !ok {
+                fmt.println("graph_width in the config is not a valid number")
+                os.exit(1)
+            }
+            if n < 20 {
+                fmt.println("graph_width in the config is too small")
+            }
+            graph_width = n
+        }
+
+        if strings.has_prefix(line, "graph_height=") {
+            n, ok := strconv.parse_int(line[len("graph_height="):])
+            if !ok {
+                fmt.println("graph_height in the config is not a valid number")
+                os.exit(1)
+            }
+            if n < 10 {
+                fmt.println("graph_height in the config is too small")
+            }
+            graph_height = n
         }
     }
 
